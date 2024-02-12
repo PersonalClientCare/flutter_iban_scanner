@@ -300,7 +300,9 @@ class _IBANScannerViewState extends State<IBANScannerView> {
         InputImageRotationValue.fromRawValue(camera.sensorOrientation) ??
             InputImageRotation.rotation0deg;
 
-    final inputImageFormat = image.format.raw ?? InputImageFormat.nv21;
+    final inputImageFormat =
+        InputImageFormatValue.fromRawValue(image.format.raw) ??
+            InputImageFormat.nv21;
 
     final inputImageData = InputImageMetadata(
       size: imageSize,
@@ -322,54 +324,18 @@ class Mask extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color _background = Colors.grey.withOpacity(0.7);
-
     return SafeArea(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  height: MediaQuery.of(context).size.height - 25,
-                  width: 1,
-                  color: _background,
-                ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height - 25,
-                width: MediaQuery.of(context).size.width * 0.95,
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        color: _background,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        border: Border.all(color: Colors.blueAccent),
-                      ),
-                      height: MediaQuery.of(context).size.width * 0.1,
-                      width: MediaQuery.of(context).size.width * 0.95,
-                    ),
-                    Expanded(
-                      child: Container(
-                        color: _background,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  height: MediaQuery.of(context).size.height - 25,
-                  width: 1,
-                  color: _background,
-                ),
-              ),
-            ],
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              border: Border.all(color: Colors.amberAccent),
+            ),
+            height: MediaQuery.of(context).size.width * 0.1,
+            width: MediaQuery.of(context).size.width * 0.95,
           )
         ],
       ),
