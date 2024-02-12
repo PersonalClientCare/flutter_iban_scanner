@@ -29,7 +29,7 @@ class IBANScannerView extends StatefulWidget {
 }
 
 class _IBANScannerViewState extends State<IBANScannerView> {
-  TextDetector textDetector = GoogleMlKit.vision.textDetector();
+  TextRecognizer textDetector = GoogleMlKit.vision.textRecognizer();
   ScreenMode _mode = ScreenMode.liveFeed;
   CameraLensDirection initialDirection = CameraLensDirection.back;
   CameraController? _controller;
@@ -200,7 +200,7 @@ class _IBANScannerViewState extends State<IBANScannerView> {
   }
 
   Future _getImage(ImageSource source) async {
-    final pickedFile = await _imagePicker.getImage(source: source);
+    final pickedFile = await _imagePicker.pickImage(source: source);
     if (pickedFile != null) {
       _processPickedFile(pickedFile);
     } else {
@@ -209,7 +209,7 @@ class _IBANScannerViewState extends State<IBANScannerView> {
     setState(() {});
   }
 
-  Future _processPickedFile(PickedFile pickedFile) async {
+  Future _processPickedFile(XFile pickedFile) async {
     setState(() {
       _image = File(pickedFile.path);
     });
@@ -297,32 +297,20 @@ class _IBANScannerViewState extends State<IBANScannerView> {
 
     final camera = cameras[_cameraIndex];
     final imageRotation =
-        InputImageRotationMethods.fromRawValue(camera.sensorOrientation) ??
-            InputImageRotation.Rotation_0deg;
+        InputImageRotationValue.fromRawValue(camera.sensorOrientation) ??
+            InputImageRotation.rotation0deg;
 
-    final inputImageFormat =
-        InputImageFormatMethods.fromRawValue(image.format.raw) ??
-            InputImageFormat.NV21;
+    final inputImageFormat = image.format.raw ?? InputImageFormat.nv21;
 
-    final planeData = image.planes.map(
-      (Plane plane) {
-        return InputImagePlaneMetadata(
-          bytesPerRow: plane.bytesPerRow,
-          height: plane.height,
-          width: plane.width,
-        );
-      },
-    ).toList();
-
-    final inputImageData = InputImageData(
+    final inputImageData = InputImageMetadata(
       size: imageSize,
-      imageRotation: imageRotation,
-      inputImageFormat: inputImageFormat,
-      planeData: planeData,
+      rotation: imageRotation,
+      format: inputImageFormat,
+      bytesPerRow: image.planes[0].bytesPerRow,
     );
 
     final inputImage =
-        InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
+        InputImage.fromBytes(bytes: bytes, metadata: inputImageData);
     if (mounted) {
       processImage(inputImage);
     }

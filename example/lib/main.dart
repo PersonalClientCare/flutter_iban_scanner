@@ -18,7 +18,9 @@ class MyApp extends StatelessWidget {
     return DismissKeyboard(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: _theme,
+        theme: _theme.copyWith(
+            colorScheme:
+                _theme.colorScheme.copyWith(secondary: Color(0xffFCC442))),
         home: Home(),
       ),
     );
@@ -197,7 +199,4 @@ class DismissKeyboard extends StatelessWidget {
   }
 }
 
-final _theme = ThemeData(
-  primaryColor: Color(0xff009ACE),
-  accentColor: Color(0xffFCC442),
-);
+final _theme = ThemeData(primaryColor: Color(0xff009ACE));
